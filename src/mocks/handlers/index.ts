@@ -6,7 +6,6 @@ export const handlers = [
     const lat = url.searchParams.get("lat");
     const lng = url.searchParams.get("lng");
     if (lat && lng) {
-      console.log({ lat, lng });
       return HttpResponse.json({ address: ["تهران", "آزادی"] });
     }
   }),
