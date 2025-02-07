@@ -7,6 +7,9 @@ export default {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    fontFamily: {
+      vazir: ["var(--font-vazir)"],
+    },
     extend: {
       colors: {
         background: "var(--background)",
