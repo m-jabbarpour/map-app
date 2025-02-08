@@ -3,15 +3,17 @@ import { useCallback, useEffect, useRef, useState } from "react";
 // leaflet
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 // services
 import { ApiService } from "@/services/apiService";
 // utils
 import { debounce } from "@/utils";
+// types
+import { IPosition } from "@/types";
 // components
+import { CustomZoomControl } from "./CustomZoomControl";
 import { SearchBar } from "./SearchBar";
 import { StaticMarker } from "./StaticMarker";
-import { IPosition } from "@/types";
 
 import("@/mocks").then(({ setupMocks }) => {
   setupMocks();
@@ -19,8 +21,23 @@ import("@/mocks").then(({ setupMocks }) => {
 
 export const Map = () => {
   const mapRef = useRef<L.Map>(null);
+  const zoomRef = useRef<number>(12);
 
   const [isMapRendered, setIsMapRendered] = useState(false);
+
+  const handleZoomIn = useCallback(() => {
+    if (zoomRef.current < 18) {
+      zoomRef.current++;
+      mapRef.current?.setZoom(zoomRef.current);
+    }
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    if (zoomRef.current > 0) {
+      zoomRef.current--;
+      mapRef.current?.setZoom(zoomRef.current);
+    }
+  }, []);
 
   const setMapView = useCallback((position: IPosition) => {
     if (mapRef.current) {
@@ -59,13 +76,13 @@ export const Map = () => {
         }}
         className="size-96"
         center={[35.6892, 51.389]}
-        zoom={13}
+        zoom={12}
         scrollWheelZoom={false}
         zoomControl={false}
       >
         <TileLayer url="https://raster.snappmaps.ir/styles/snapp-style/{z}/{x}/{y}{r}.png" />
         <StaticMarker />
-        <ZoomControl position="bottomleft" />
+        <CustomZoomControl onZoomIn={handleZoomIn} onZoomOut={handleZoomOut} />
         <SearchBar setMapViewtoSearchResult={setMapView} />
       </MapContainer>
     </div>
